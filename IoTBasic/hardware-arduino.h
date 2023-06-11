@@ -15,9 +15,9 @@
  *
  * Hardware definition file coming with TinybasicArduino.ino aka basic.c
  *
- * - ARDUINOLCD, ARDUINOTFT and LCDSHIELD active the LCD code, 
- *   LCDSHIELD automatically defines the right settings for 
- *   the classical shield modules
+ *  - ARDUINOLCD, ARDUINOTFT and LCDSHIELD active the LCD code,
+ *    LCDSHIELD automatically defines the right settings for
+ *    the classical shield modules
  *  - ARDUINOPS2 activates the PS2 code. Default pins are 2 and 3.
  *    If you use other pins the respective changes have to be made 
  *    below. 
@@ -25,7 +25,7 @@
  *    to start with keyboard and lcd as standard devices.
  *  - ARDUINOEEPROM includes the EEPROM access code
  *  - ARDUINOEFS, ARDUINOSD, ESPSPIFFS, RP2040LITTLEFS activate filesystem code 
- * - activating Picoserial, Picoserial doesn't work on MEGA
+ *  - activating Picoserial, Picoserial doesn't work on MEGA
  *
  * Architectures and the definitions from the Arduino IDE
  *
@@ -51,16 +51,22 @@
  * Arduino hardware settings , set here what you need or
  * use one of the predefined configurations below
  *
- * input/output methods USERPICOSERIAL, ARDUINOPS2
- *	ARDUINOPRT, DISPLAYCANSCROLL, ARDUINOLCDI2C,
- *	ARDUINOTFT, ARDUINONOKIA51, ARDUINOILI9488,
- *  ARDUINOSSD1306, ARDUINOMCUFRIEND
- * storage ARDUINOEEPROM, ARDUINOSD, ESPSPIFFS, RP2040LITTLEFS
- * storage ARDUINOEFS, SM32SDIO
- * sensors ARDUINOWIRE, ARDUINOSENSORS
- * network ARDUINORF24, ARDUNIOMQTT 
- * memory ARDUINOSPIRAM
- * real time clocks ARDUINORTC, ARDUINORTCEMULATION
+ * input/output methods:
+ *   USERPICOSERIAL, ARDUINOPS2,
+ *	 ARDUINOPRT, DISPLAYCANSCROLL, ARDUINOLCDI2C,
+ *	 ARDUINOTFT, ARDUINONOKIA51, ARDUINOILI9488,
+ *   ARDUINOSSD1306, ARDUINOMCUFRIEND
+ * storage:
+ *   ARDUINOEEPROM, ARDUINOSD, ESPSPIFFS, RP2040LITTLEFS,
+ *   ARDUINOEFS, SM32SDIO
+ * sensors:
+ *   ARDUINOWIRE, ARDUINOSENSORS
+ * network:
+ *   ARDUINORF24, ARDUNIOMQTT
+ * memory:
+ *   ARDUINOSPIRAM
+ * real time clocks:
+ *   ARDUINORTC, ARDUINORTCEMULATION
  *
  *	leave this unset if you use the definitions below
  */
@@ -78,7 +84,7 @@
 #undef ARDUINOMCUFRIEND
 #undef ARDUINOEDP47
 #undef ARDUINOGRAPHDUMMY
-#undef LCDSHIELD
+#define LCDSHIELD
 #undef ARDUINOTFT
 #undef ARDUINOVGA
 #define ARDUINOEEPROM
@@ -126,27 +132,25 @@
  *		optional keyboard and i2c display
  *	TTGOVGA: 
  *		TTGO VGA1.4 system with PS2 keyboard, standalone
- * MEGATFT, DUETFT
+ *  MEGATFT, DUETFT
  *    TFT 7inch screen systems, standalone
- * NANOBOARD:
- *   Arduino Nano Every board with PS2 keyboard and sensor 
- *    kit
- * MEGABOARD:
- *  A board for the MEGA with 64 kB RAM, SD Card, and real time
- *    clock
- * UNOBOARD:
- *  A board for an UNO with 64kB memory and EEPROM disk
+ *  NANOBOARD:
+ *    Arduino Nano Every board with PS2 keyboard and sensor kit
+ *  MEGABOARD:
+ *    A board for the MEGA with 64 kB RAM, SD Card, and real time clock
+ *  UNOBOARD:
+ *    A board for an UNO with 64kB memory and EEPROM disk
  *    fits into an UNO flash only with integer
- * ESP01BOARD:
+ *  ESP01BOARD:
  *    ESP01 based board as a sensor / MQTT interface
- * RP2040BOARD:
+ *  RP2040BOARD:
  *    A ILI9488 hardware design based on an Arduino connect RP2040.
- * RP2040BOARD2:
- *  like the one above but based on the Pi Pico core
- * ESP32BOARD:
- *  same like above with an ESP32 core
- * MKRBOARD:
- *   a digital signage and low energy board
+ *  RP2040BOARD2:
+ *    like the one above but based on the Pi Pico core
+ *  ESP32BOARD:
+ *    same like above with an ESP32 core
+ *  MKRBOARD:
+ *    a digital signage and low energy board
  */
 
 #undef UNOPLAIN
@@ -263,11 +267,15 @@ const char zx81pins[] = {7, 8, 9, 10, 11, 12, A0, A1, 2, 3, 4, 5, 6 };
  */
 #ifdef ARDUINOSENSORS
 #undef ARDUINODHT
-#define DHTTYPE DHT22
-#define DHTPIN 2
-#define  ARDUINOSHT
-#define  ARDUINOMQ2
-#define MQ2PIN A0
+#define SIMPLEDHT
+#define DHTTYPE11 1
+#define DHTTYPE22 2
+#define   DHTTYPE DHTTYPE11
+//#define   DHTTYPE DHTTYPE22
+#define   DHTPIN 2
+#undef ARDUINOSHT
+#undef ARDUINOMQ2
+#undef MQ2PIN A0
 #undef ARDUINOLMS6
 #undef ARDUINOAHT
 #undef ARDUINOBMP280
@@ -1175,7 +1183,7 @@ void dspsetbgcolor(uint8_t c) {}
 void dspsetreverse(mem_t c) {}
 mem_t dspident() {return 0; }
 #define HASKEYPAD
-/* elementary keypad reader left=1, right=2, up=3, down=4, select=<lf> */
+/* elementary keypad reader left=1, right=2, up=3, down=4, select=<lf>
 short keypadread(){
 	int a=analogRead(A0);
 	if (a >= 850) return 0;
@@ -1184,7 +1192,17 @@ short keypadread(){
 	else if (a>=200 && a<400) return '3';
 	else if (a>=60  && a<200) return '4';
 	else return '2';
+} */
+short keypadread(){
+	int a=analogRead(A0);
+	     if (a >= 850)            return 10;
+	else if (a >= 700 && a < 900) return '4';
+	else if (a >= 500 && a < 700) return '3';
+	else if (a >= 300 && a < 500) return '2';
+	else if (a >= 100 && a < 300) return '1';
+	else                          return 0;
 }
+
 /* repeat mode of the keypad - off means block, on means return immediately */
 mem_t kbdrepeat=0;
 #endif
@@ -4566,16 +4584,20 @@ void consins(char *b, short nb) {
 	}
 #endif
 	while(z.a < nb) {
-  		c=inch();
-  		if (id == ISERIAL || id == IKEYBOARD) outch(c); /* this is local echo */
-  		if (c == '\r') c=inch(); 			/* skip carriage return */
-  		if (c == '\n' || c == -1 || c == 255) { 	/* terminal character is either newline or EOF */
-    		break;
-  		} else if (c == 127 || c == 8) {
-        if (z.a>1) z.a--;
-  		} else {
-   			b[z.a++]=c;
-  		} 
+		c=inch();
+		if (c == '\r') {
+			c=inch(); 			/* skip carriage return */
+			// if (id == ISERIAL || id == IKEYBOARD) outch('r'); /* this is local echo */
+		}
+		if (id == ISERIAL || id == IKEYBOARD) outch(c); /* this is local echo */
+		if (c == '\n' || c == -1 || c == 255) { 	/* terminal character is either newline or EOF */
+			// if (id == ISERIAL || id == IKEYBOARD) outch('<'); /* this is local echo */
+			break;
+		} else if (c == 127 || c == 8) {
+			if (z.a>1) z.a--;
+		} else {
+			b[z.a++]=c;
+		}
 	}
 	b[z.a]=0;
 	z.a--;
@@ -4945,6 +4967,14 @@ void radioset(int s) {
 #include "DHT.h"
 DHT dht(DHTPIN, DHTTYPE);
 #endif
+#ifdef SIMPLEDHT
+#include "SimpleDHT.h"
+#if DHTTYPE == DHTTYPE11
+  SimpleDHT11 dht(DHTPIN);
+#elif DHTTYPE == DHTTYPE22
+  SimpleDHT22 dht(DHTPIN);
+#endif
+#endif
 #ifdef ARDUINOSHT
 #include <SHT3x.h>
 SHT3x SHT;
@@ -4975,6 +5005,9 @@ Adafruit_BME280 bme;
 void sensorbegin(){
 #ifdef ARDUINODHT
 dht.begin();
+#endif
+#ifdef SIMPLEDHT
+//dht.begin();
 #endif
 #ifdef ARDUINOSHT
   SHT.Begin();
@@ -5012,6 +5045,28 @@ number_t sensorread(short s, short v) {
 				case 2:
 					return dht.readTemperature();
 			}     	
+#endif
+#ifdef SIMPLEDHT
+			byte temperature = 0;
+			byte humidity = 0;
+			int err = SimpleDHTErrSuccess;
+#if DHTTYPE == DHTTYPE11
+			if ((err = dht.read(&temperature, &humidity, NULL)) != SimpleDHTErrSuccess) {
+				return 0;
+			}
+#elif DHTTYPE == DHTTYPE22
+			if ((err = dht.read2(&temperature, &humidity, NULL)) != SimpleDHTErrSuccess) {
+				return 0;
+			}
+#endif
+			switch (v) {
+				case 0:
+					return 1;
+				case 1:
+					return humidity;
+				case 2:
+					return temperature;
+			}
 #endif
       return 0;
     case 2:
