@@ -15,9 +15,9 @@
  *
  * Hardware definition file coming with TinybasicArduino.ino aka basic.c
  *
- * - ARDUINOLCD, ARDUINOTFT and LCDSHIELD active the LCD code, 
- *   LCDSHIELD automatically defines the right settings for 
- *   the classical shield modules
+ *  - ARDUINOLCD, ARDUINOTFT and LCDSHIELD active the LCD code,
+ *    LCDSHIELD automatically defines the right settings for
+ *    the classical shield modules
  *  - ARDUINOPS2 activates the PS2 code. Default pins are 2 and 3.
  *    If you use other pins the respective changes have to be made 
  *    below. 
@@ -25,7 +25,7 @@
  *    to start with keyboard and lcd as standard devices.
  *  - ARDUINOEEPROM includes the EEPROM access code
  *  - ARDUINOEFS, ARDUINOSD, ESPSPIFFS, RP2040LITTLEFS activate filesystem code 
- * - activating Picoserial, Picoserial doesn't work on MEGA
+ *  - activating Picoserial, Picoserial doesn't work on MEGA
  *
  * Architectures and the definitions from the Arduino IDE
  *
@@ -51,16 +51,22 @@
  * Arduino hardware settings , set here what you need or
  * use one of the predefined configurations below
  *
- * input/output methods USERPICOSERIAL, ARDUINOPS2
- *	ARDUINOPRT, DISPLAYCANSCROLL, ARDUINOLCDI2C,
- *	ARDUINOTFT, ARDUINONOKIA51, ARDUINOILI9488,
- *  ARDUINOSSD1306, ARDUINOMCUFRIEND
- * storage ARDUINOEEPROM, ARDUINOSD, ESPSPIFFS, RP2040LITTLEFS
- * storage ARDUINOEFS, SM32SDIO
- * sensors ARDUINOWIRE, ARDUINOSENSORS
- * network ARDUINORF24, ARDUNIOMQTT 
- * memory ARDUINOSPIRAM
- * real time clocks ARDUINORTC, ARDUINORTCEMULATION
+ * input/output methods:
+ *   USERPICOSERIAL, ARDUINOPS2,
+ *	 ARDUINOPRT, DISPLAYCANSCROLL, ARDUINOLCDI2C,
+ *	 ARDUINOTFT, ARDUINONOKIA51, ARDUINOILI9488,
+ *   ARDUINOSSD1306, ARDUINOMCUFRIEND, ARDUINOGFX
+ * storage:
+ *   ARDUINOEEPROM, ARDUINOSD, ESPSPIFFS, RP2040LITTLEFS,
+ *   ARDUINOEFS, SM32SDIO
+ * sensors:
+ *   ARDUINOWIRE, ARDUINOSENSORS
+ * network:
+ *   ARDUINORF24, ARDUNIOMQTT
+ * memory:
+ *   ARDUINOSPIRAM
+ * real time clocks:
+ *   ARDUINORTC, ARDUINORTCEMULATION
  *
  *	leave this unset if you use the definitions below
  */
@@ -76,6 +82,7 @@
 #undef ARDUINOILI9488
 #undef ARDUINOSSD1306
 #undef ARDUINOMCUFRIEND
+#undef ARDUINOGFX
 #undef ARDUINOEDP47
 #undef ARDUINOGRAPHDUMMY
 #undef LCDSHIELD
@@ -126,27 +133,29 @@
  *		optional keyboard and i2c display
  *	TTGOVGA: 
  *		TTGO VGA1.4 system with PS2 keyboard, standalone
- * MEGATFT, DUETFT
+ *  MEGATFT, DUETFT
  *    TFT 7inch screen systems, standalone
- * NANOBOARD:
- *   Arduino Nano Every board with PS2 keyboard and sensor 
- *    kit
- * MEGABOARD:
- *  A board for the MEGA with 64 kB RAM, SD Card, and real time
- *    clock
- * UNOBOARD:
- *  A board for an UNO with 64kB memory and EEPROM disk
+ *  NANOBOARD:
+ *    Arduino Nano Every board with PS2 keyboard and sensor kit
+ *  MEGABOARD:
+ *    A board for the MEGA with 64 kB RAM, SD Card, and real time clock
+ *  UNOBOARD:
+ *    A board for an UNO with 64kB memory and EEPROM disk
  *    fits into an UNO flash only with integer
- * ESP01BOARD:
+ *  ESP01BOARD:
  *    ESP01 based board as a sensor / MQTT interface
- * RP2040BOARD:
+ *  RP2040BOARD:
  *    A ILI9488 hardware design based on an Arduino connect RP2040.
- * RP2040BOARD2:
- *  like the one above but based on the Pi Pico core
- * ESP32BOARD:
- *  same like above with an ESP32 core
- * MKRBOARD:
- *   a digital signage and low energy board
+ *  RP2040BOARD2:
+ *    like the one above but based on the Pi Pico core
+ *  ESP32BOARD:
+ *    same like above with an ESP32 core
+ *  MKRBOARD:
+ *    a digital signage and low energy board
+ *  MYESP32CONFIG:
+ *    an ESP32 dev board with an LCD and some buttons and a buzzer attached
+ *  LILYGODONGLE:
+ *    an ESP32-S3 usb dongle featuring an lcd / sd card / button / rgb led
  */
 
 #undef UNOPLAIN
@@ -164,6 +173,8 @@
 #undef RP2040BOARD2
 #undef ESP32BOARD
 #undef MKR1010BOARD
+#undef MYESP32CONFIG
+#define LILYGODONGLES3
 
 /* 
  * PIN settings and I2C addresses for various hardware configurations
@@ -519,6 +530,58 @@ const char zx81pins[] = {7, 8, 9, 10, 11, 12, A0, A1, 2, 3, 4, 5, 6 };
 #undef STANDALONE
 #endif
 
+#if defined(MYESP32CONFIG)
+#define LCDSHIELD
+#define ARDUINOWIRE
+#define ESPSPIFFS
+#define ARDUINOMQTT
+#define ARDUINOSENSORS
+#endif
+
+/* a usb dongle based on ESP32-S3
+ * ST7735 80X160 LCD, SD card, RDG led, 1 button, WIFI
+ */
+#if defined(LILYGODONGLES3)
+#define ESPSPIFFS
+#define ARDUINOMQTT
+#define ARDUINOGFX
+//
+// GPIO configuration
+//
+
+// Button hardware configuration:
+#define BUTTON_GPIO GPIO_NUM_0
+
+// RGB led hardware configuration:
+// https://github.com/pololu/apa102-arduino
+#define RGBLED_CI 39
+#define RGBLED_DI 40
+#define LEDSTRIP_LEN 1
+
+// Display (ST7735s) hardware configuration:
+#define DISPLAY_RST     1
+#define DISPLAY_DC      2
+#define DISPLAY_MOSI    3
+#define DISPLAY_CS      4
+#define DISPLAY_SCLK    5
+#define DISPLAY_LEDA   38
+#define DISPLAY_MISO   -1
+#define DISPLAY_BUSY   -1
+#define DISPLAY_WIDTH 160
+#define DISPLAY_HEIGHT 80
+#define LV_BUF_SIZE (DISPLAY_WIDTH * DISPLAY_HEIGHT)
+
+// SD-MMC interface
+#define SDMMC_MOUNTPOINT "/sdcard"
+#define SDMMC_D0  (gpio_num_t)14
+#define SDMMC_D1  (gpio_num_t)17
+#define SDMMC_D2  (gpio_num_t)21
+#define SDMMC_D3  (gpio_num_t)18
+#define SDMMC_CLK (gpio_num_t)12
+#define SDMMC_CMD (gpio_num_t)16
+
+#endif
+
 /*
  * defining the systype variable which informs BASIC about the platform at runtime
  */
@@ -636,7 +699,7 @@ const mem_t bsystype = SYSTYPE_UNKNOWN;
  * language setting 
  * this is odd and can be removed later on
  */
-#if !defined(ARDUINOTFT) && !defined(ARDUINOVGA) && !defined(ARDUINOILI9488) && !defined(ARDUINONOKIA51) && !defined(ARDUINOSSD1306) && !defined(ARDUINOMCUFRIEND) && !defined(ARDUINOGRAPHDUMMY) && !defined(ARDUINOEDP47)
+#if !defined(ARDUINOTFT) && !defined(ARDUINOVGA) && !defined(ARDUINOILI9488) && !defined(ARDUINONOKIA51) && !defined(ARDUINOSSD1306) && !defined(ARDUINOMCUFRIEND) && !defined(ARDUINOGFX) && !defined(ARDUINOGRAPHDUMMY) && !defined(ARDUINOEDP47)
 #undef HASGRAPH
 #endif
 
@@ -763,6 +826,10 @@ const mem_t bsystype = SYSTYPE_UNKNOWN;
 #ifdef ARDUINOMCUFRIEND
 #include <Adafruit_GFX.h>
 #include <MCUFRIEND_kbv.h>
+#endif
+
+#ifdef ARDUINOGFX
+#include <Arduino_GFX_Library.h>
 #endif
 
 /*
@@ -1443,6 +1510,108 @@ void rect(int x0, int y0, int x1, int y1)   { tft.drawRect(x0, x0, x1, y1, dspfg
 void frect(int x0, int y0, int x1, int y1)  { tft.fillRect(x0, x0, x1, y1, dspfgcolor); }
 void circle(int x0, int y0, int r) { tft.drawCircle(x0, y0, r, dspfgcolor); }
 void fcircle(int x0, int y0, int r) { tft.fillCircle(x0, y0, r, dspfgcolor); }
+#endif
+
+/*
+ */
+
+#ifdef ARDUINOGFX
+#define DISPLAYDRIVER
+#define DISPLAYHASCOLOR
+#define DISPLAYHASGRAPH
+Arduino_DataBus *bus = new Arduino_ESP32SPI(
+    DISPLAY_DC /* DC */,
+    DISPLAY_CS /* CS */,
+    DISPLAY_SCLK /* SCK */,
+    DISPLAY_MOSI /* MOSI */,
+    GFX_NOT_DEFINED /* MISO */,
+    HSPI /* spi_num (VSPI/HSPI)*/);
+Arduino_GFX *gfx = new Arduino_ST7735(
+    bus,
+    DISPLAY_RST /* RST */,
+    3 /* rotation */,
+    true /* IPS */,
+    DISPLAY_HEIGHT /* width */, DISPLAY_WIDTH /* height */,
+    26 /* col offset 1 */, 1 /* row offset 1 */,
+    26 /* col offset 2 */, 1 /* row offset 2 */);
+
+#define TEXTSIZEFACTOR 1
+const char dspfontsize = 8 * TEXTSIZEFACTOR;
+const int dsp_rows = DISPLAY_HEIGHT / dspfontsize;
+const int dsp_columns = DISPLAY_WIDTH / dspfontsize;
+
+typedef uint16_t dspcolor_t;
+const uint16_t dspdefaultfgcolor = 0xFFFF;
+const uint8_t dspdefaultfgvgacolor = 0x0F;
+dspcolor_t dspfgcolor = dspdefaultfgcolor;
+dspcolor_t dspbgcolor = RGB565_NAVY;
+dspcolor_t dsptmpcolor = 0;
+uint8_t dspfgvgacolor = dspdefaultfgvgacolor;
+uint8_t dsptmpvgacolor = 0;
+void dspbegin()
+{
+  gfx->begin();
+  gfx->setTextColor(dspfgcolor);
+  gfx->setTextSize(TEXTSIZEFACTOR); /* 8x7 -> 16x14*/
+  gfx->fillScreen(dspbgcolor);
+  pinMode(DISPLAY_LEDA, OUTPUT);
+  analogWrite(DISPLAY_LEDA, 240); /* 0 is full bright, 255 is off */
+  /* 0 normal scroll, 1 enable waitonscroll function */
+  dspsetscrollmode(1, 5); /* scrolling is off, scroll 2 lines at once */
+}
+void dspprintchar(char c, mem_t col, mem_t row)
+{
+  if (c)
+  {
+    gfx->drawChar(col * dspfontsize, row * dspfontsize, c, dspfgcolor, dspbgcolor);
+  }
+}
+void dspclear()
+{
+  gfx->fillScreen(dspbgcolor);
+  dspfgcolor = dspdefaultfgcolor;
+  dspfgvgacolor = dspdefaultfgvgacolor;
+}
+void dspupdate() {}
+void dspsetcursor(mem_t c) {}
+void dspsavepen()
+{
+  dsptmpcolor = dspfgcolor;
+  dsptmpvgacolor = dspfgvgacolor;
+}
+void dsprestorepen()
+{
+  dspfgcolor = dsptmpcolor;
+  dspfgvgacolor = dsptmpvgacolor;
+}
+void dspsetfgcolor(uint8_t c) { vgacolor(c); }
+void dspsetbgcolor(uint8_t c) {}
+void dspsetreverse(mem_t c) {}
+mem_t dspident() { return 0; }
+void rgbcolor(int r, int g, int b)
+{
+  dspfgvgacolor = rgbtovga(r, g, b);
+  dspfgcolor = gfx->color565(r, g, b);
+}
+void vgacolor(short c)
+{
+  short base = 128;
+  dspfgvgacolor = c;
+  if (c == 8)
+  {
+    dspfgcolor = gfx->color565(64, 64, 64);
+    return;
+  }
+  if (c > 8)
+    base = 255;
+  dspfgcolor = gfx->color565(base * (c & 1), base * ((c & 2) / 2), base * ((c & 4) / 4));
+}
+void plot(int x0, int y0) { gfx->drawPixel(x0, y0, dspfgcolor); }
+void line(int x0, int y0, int x1, int y1) { gfx->drawLine(x0, y0, x1, y1, dspfgcolor); }
+void rect(int x0, int y0, int x1, int y1) { gfx->drawRect(x0, x0, abs(x1 - x0), abs(y1 - y0), dspfgcolor); }
+void frect(int x0, int y0, int x1, int y1) { gfx->fillRect(x0, x0, abs(x1 - x0), abs(y1 - y0), dspfgcolor); }
+void circle(int x0, int y0, int r) { gfx->drawCircle(x0, y0, r, dspfgcolor); }
+void fcircle(int x0, int y0, int r) { gfx->fillCircle(x0, y0, r, dspfgcolor); }
 #endif
 
 /* 

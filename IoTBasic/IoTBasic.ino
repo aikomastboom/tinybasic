@@ -46,8 +46,8 @@
  * BASICTINYWITHFLOAT: a floating point tinybasic, if you have 32kB and need complex device drivers
  * BASICMINIMAL: minimal language, just Palo Alto plus Arduino I/O, works on 168 with 1kB RAM and 16kB flash
  */
-#undef	BASICFULL
-#define	BASICINTEGER
+#define	BASICFULL
+#undef  BASICINTEGER
 #undef	BASICSIMPLE
 #undef	BASICMINIMAL
 #undef	BASICSIMPLEWITHFLOAT
@@ -229,8 +229,8 @@
 #undef HASSTRUCT
 #endif
 
-/* 
- * hardcoded memory size, set 0 for automatic malloc, don't redefine this beyond this point 
+/*
+ * hardcoded memory size, set 0 for automatic malloc, don't redefine this beyond this point
  */
 #define MEMSIZE 0
 
@@ -1512,7 +1512,7 @@ void error(token_t e){
 		outspc();
 	}
 
-/* if we have error messages, display them */	
+/* if we have error messages, display them */
 #ifdef HASERRORMSG
 	if (e > 0)
 		printmessage(e);
@@ -1701,7 +1701,7 @@ token_t peekforstack() {
 	} else {
 		error(ELOOP);
 		return 0;
-	} 
+	}
 }
 
 void clrforstack() {
@@ -1747,18 +1747,18 @@ void clrgosubstack() {
 void pushlocation() {
 		if (st == SINT)
 			slocation=bi-ibuffer;
-		else 
+		else
 			slocation=here;
 }
 
 void poplocation() {
 	if (st == SINT)
 		bi=ibuffer+slocation;
-	else 
-		here=slocation;	
+	else
+		here=slocation;
 }
 
-/* 
+/*
  *	Input and output functions.
  * 
  * ioinit(): called at setup to initialize what ever io is needed
@@ -4757,10 +4757,10 @@ void xelse() {
 void findnextcmd(){
 	address_t fnc = 0;
 
-	while (1) {			
+	while (1) {
 		if (token == TNEXT) {
 	    	if (fnc == 0) {
-	    		return; 
+	    		return;
 	    	} else fnc--;
 		}
 		if (token == TFOR) fnc++;
@@ -4777,10 +4777,10 @@ void findnextcmd(){
 void findbraket(token_t bra, token_t ket){
 	address_t fnc = 0;
 
-	while (1) {			
+	while (1) {
 		if (token == ket) {
 	    	if (fnc == 0) {
-	    		return; 
+	    		return;
 	    	} else fnc--;
 		}
 		if (token == bra) fnc++;
@@ -4873,23 +4873,23 @@ void xfor(){
 #ifdef HASSTRUCT
 void xbreak(){
 	token_t t;
-	t=peekforstack(); 
+	t=peekforstack();
 	if (er != 0) return;
 	dropforstack();
 	switch (t) {
-		case TWHILE: 
+		case TWHILE:
 			findbraket(TWHILE, TWEND);
 			nexttoken();
 			break;
 		case TREPEAT:
 			findbraket(TREPEAT, TUNTIL);
 			while (!termsymbol()) nexttoken();
-			break;	
+			break;
 		default: /* a FOR loop is the default */
 			findbraket(TFOR, TNEXT);
-			nexttoken();	
+			nexttoken();
 			if (token == VARIABLE) nexttoken(); /* more evil - this should really check */
-			break;	
+			break;
 	}
 }
 #else
@@ -4909,10 +4909,10 @@ void xbreak(){
 #ifdef HASSTRUCT
 void xcont() {
 	token_t t;
-	t=peekforstack(); 
+	t=peekforstack();
 	if (er != 0) return;
 	switch (t) {
-		case TWHILE: 
+		case TWHILE:
 			findbraket(TWHILE, TWEND);
 			break;
 		case TREPEAT:
@@ -4965,7 +4965,7 @@ void xnext(){
 	}
 #endif
 
-/* a variable argument in next clears the for stack 
+/* a variable argument in next clears the for stack
 		down as BASIC programs can and do jump out to an outer next */
 	if (xcl) {
 		while (xcl != xc || ycl != yc ) {
@@ -7359,7 +7359,7 @@ void xwhile() {
 /* interactively we need to save the buffer location */
 	if (st == SINT) here=bi-ibuffer;
 
-/* save the current location and token type, here points to the condition */ 
+/* save the current location and token type, here points to the condition */
 	pushforstack();
 
 /* is there a valid condition */
@@ -7404,7 +7404,7 @@ void xwend() {
 		popforstack();
 		poplocation();
 		nexttoken();
-	} 
+	}
 }
 
 void xrepeat() {
@@ -7414,7 +7414,7 @@ void xrepeat() {
 /* interactively we need to save the buffer location */
 	if (st == SINT) here=bi-ibuffer;
 
-/* save the current location and token type, here points statement after repeat */ 
+/* save the current location and token type, here points statement after repeat */
 	pushforstack();
 
 /* we are done here */
@@ -7499,7 +7499,7 @@ void xswitch() {
 	}
 
 /* return to the original location and continue if no case is found */
-	poplocation(); 	
+	poplocation();
 }
 
 /* a nacked case statement always seeks the end of the switch */
@@ -7509,7 +7509,7 @@ void xcase() {
 #endif
 
 
-/* 
+/*
  *	statement processes an entire basic statement until the end 
  *	of the line. 
  *
@@ -7780,16 +7780,16 @@ void statement(){
 				break;
 			case TREPEAT:
 				xrepeat();
-				break;				
+				break;
 			case TUNTIL:
 				xuntil();
-				break;				
+				break;
 			case TSWITCH:
 				xswitch();
-				break;	
+				break;
 			case TCASE:
 				xcase();
-				break;	
+				break;
 			case TSWEND:
 				nexttoken();
 				break;
