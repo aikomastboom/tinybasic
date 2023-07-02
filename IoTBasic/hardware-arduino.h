@@ -270,9 +270,10 @@ const char zx81pins[] = {7, 8, 9, 10, 11, 12, A0, A1, 2, 3, 4, 5, 6 };
 #define SIMPLEDHT
 #define DHTTYPE11 1
 #define DHTTYPE22 2
-#define   DHTTYPE DHTTYPE11
-//#define   DHTTYPE DHTTYPE22
-#define   DHTPIN 2
+#define DHTTYPE DHTTYPE11
+// #define   DHTTYPE DHTTYPE22
+// #define   DHTPIN 2
+#define DHTPIN GPIO_NUM_21
 #undef ARDUINOSHT
 #undef ARDUINOMQ2
 #undef MQ2PIN A0
@@ -1194,13 +1195,18 @@ short keypadread(){
 	else return '2';
 } */
 short keypadread(){
-	int a=analogRead(A0);
-	     if (a >= 850)            return 10;
-	else if (a >= 700 && a < 900) return '4';
-	else if (a >= 500 && a < 700) return '3';
-	else if (a >= 300 && a < 500) return '2';
-	else if (a >= 100 && a < 300) return '1';
-	else                          return 0;
+#if defined(ARDUINO_ARCH_ESP32)
+  int a = analogRead(GPIO_NUM_36);
+  a = map(a, 0, 4095, 0, 1023);
+#else
+  int a = analogRead(A0);
+#endif
+       if (a >= 850)            return 10;
+  else if (a >= 700 && a < 900) return '4';
+  else if (a >= 500 && a < 700) return '3';
+  else if (a >= 300 && a < 500) return '2';
+  else if (a >= 100 && a < 300) return '1';
+  else                          return 0;
 }
 
 /* repeat mode of the keypad - off means block, on means return immediately */
@@ -5036,6 +5042,7 @@ number_t sensorread(short s, short v) {
     case 0:
       return analogRead(A0+v);
     case 1:
+  {
 #ifdef ARDUINODHT
 			switch (v) {
 				case 0:
@@ -5069,6 +5076,7 @@ number_t sensorread(short s, short v) {
 			}
 #endif
       return 0;
+  }
     case 2:
 #ifdef ARDUINOSHT
       switch (v) {

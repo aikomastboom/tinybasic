@@ -7789,7 +7789,11 @@ int main(int argc, char* argv[]){
 
  void bsetup() {
   /* put your setup code here, to run once: */
-  
+#ifndef ARDUINOTONEEMULATION
+  #ifdef ARDUINO_ARCH_ESP32
+  setToneChannel();
+  #endif
+#endif
  }
 
  void bloop() {
