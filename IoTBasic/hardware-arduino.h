@@ -308,7 +308,7 @@ const char zx81pins[] = {7, 8, 9, 10, 11, 12, A0, A1, 2, 3, 4, 5, 6 };
 #endif
 
 /*
- * a Wemos ESP8266 with a mdified datalogger shield 
+ * a Wemos ESP8266 with a modified datalogger shield
  * standalone capable, with Wire and MQTT.
  */
 #if defined(WEMOSSHIELD)

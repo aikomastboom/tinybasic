@@ -10,14 +10,14 @@
  *
  *	Author: Stefan Lenz, sl001@serverfabrik.de
  *
- *	The first set of definions define the target.
+ *	The first set of definitions define the target.
  *	- MINGW switches on Windows calls - this is the mingw.org version 
  *  _ MINGW64 like MINGW but with the mingw 64 support 
  *	- MSDOS for MSDOS file access.
  *	- MAC doesn't need more settings here
  *	- RASPPI activates wiring code
  *	- Review hardware-*.h for settings specific Arduino hardware settings
- *	- HAS* activates or deactives features of the interpreter
+ *	- HAS* activates or deactivates features of the interpreter
  *	- the extension flags control features and code size
  *
  *	MEMSIZE sets the BASIC main memory to a fixed value,
@@ -278,7 +278,7 @@
  */
 
 /* 
- *	the byield function is called after every statement
+ *	the byield() function is called after every statement
  *	it allows four levels of background tasks. 
  * 
  * fastticker() is used to trigger all fast timing functions of 
@@ -288,10 +288,10 @@
  * yieldfunction() triggers a 32ms timer which calls network 
  * and USB handling functions
  * 
- * longyielfunction() is a 1s timer for long termin maintance 
+ * longyieldfunction() is a 1s timer for long term maintenance
  * functions
  * 
- * yieldscheduler() is the hardware scheduler of some platforms
+ * yieldschedule() is the hardware scheduler of some platforms
  * 
  */
 
