@@ -557,6 +557,31 @@ const char zx81pins[] = {7, 8, 9, 10, 11, 12, A0, A1, 2, 3, 4, 5, 6 };
 #define RGBLED_CI 39
 #define RGBLED_DI 40
 #define LEDSTRIP_LEN 1
+#include <APA102.h>
+
+const uint8_t dataPin =  RGBLED_DI;
+const uint8_t clockPin = RGBLED_CI;
+const uint8_t ledCount = LEDSTRIP_LEN;
+APA102<dataPin, clockPin> ledStrip;
+
+void ledstripbegin()
+{
+  ledStrip.startFrame();
+}
+
+void ledstripwrite(mem_t c)
+{
+  for (uint16_t i = 0; i < ledCount; i++)
+  {
+    ledStrip.sendColor(
+        77 /* Red */,
+        8 /* Green */,
+        10 /* Blue */,
+        12 /* Brightness 0-31 */);
+  }
+
+  ledStrip.endFrame(ledCount);
+}
 
 // Display (ST7735s) hardware configuration:
 #define DISPLAY_RST     1
@@ -3423,6 +3448,12 @@ EepromFS EFSRAW(I2CEEPROMADDR, I2CEEPROMSIZE);
 #else
 EepromFS EFSRAW(I2CEEPROMADDR);
 #endif
+#endif
+
+/*
+ */
+#if defined(LEDSTRIP)
+
 #endif
 
 /*

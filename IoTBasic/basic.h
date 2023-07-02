@@ -300,6 +300,7 @@ typedef unsigned char uint8_t;
 #define ORADIO 8
 #define OMQTT  9
 #define OFILE 16
+#define OLEDSTRIP 32
 
 #define ISERIAL 1
 #define IKEYBOARD 2
@@ -1199,6 +1200,10 @@ number_t sensorread(short, short);
 address_t spirambegin();
 void spiramrawwrite(address_t, mem_t);
 mem_t spiramrawread(address_t );
+
+/* LEDstrip control code */
+void ledstripbegin();
+void ledstripwrite(mem_t);
 
 /*
  * Layer 0 functions - I/O and memory management 
